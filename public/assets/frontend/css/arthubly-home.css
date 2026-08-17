@@ -1,0 +1,291 @@
+/* ======================================================================
+   ARTHUBLY — HOME CSS
+   File: public/assets/frontend/css/arthubly-home.css
+
+   SIRF index.blade.php ke liye. Listing / category / search par load
+   nahi hoti, isliye wahan ka layout kabhi affect nahi hota.
+
+   CONTENTS
+   --------
+   A. SCROLL REVEAL — home ke cards
+   B. NEW ARRIVALS  — horizontal rail (arrows + progress)
+   C. MADE BY HAND  — staggered mosaic
+   ====================================================================== */
+/* =========================================================================
+   ARTHUBLY — HOME PAGE SECTIONS ONLY
+   File: public/assets/frontend/css/home-sections.css
+
+   Ye file SIRF index.blade.php se load hoti hai. Product card ka partial
+   bilkul chhua nahi gaya, isliye listing / category / search pages par
+   koi asar nahi padta.
+
+   Isme hai:
+   1. New arrivals  → horizontal rail (snap + arrows + progress bar)
+   2. Made by hand  → staggered mosaic (columns halke offset par)
+   3. Scroll reveal → har card apne aap fade + rise hota hai
+   ========================================================================= */
+
+/* =========================================================================
+   1. SHARED — scroll reveal
+   ========================================================================= */
+.hm-section .hm-slide,
+.hm-section .hm-cell {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity .6s cubic-bezier(.22, .8, .28, 1),
+    transform .6s cubic-bezier(.22, .8, .28, 1);
+  transition-delay: calc(var(--d, 0) * 70ms);
+}
+
+.hm-section .hm-slide.in,
+.hm-section .hm-cell.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* card ke andar image ka halka scale-in — sirf home par */
+.hm-section .pcard-v2 .pc-img.main {
+  transform: scale(1.04);
+  transition: transform .9s cubic-bezier(.22, .8, .28, 1), opacity .5s;
+}
+
+.hm-section .in .pcard-v2 .pc-img.main {
+  transform: scale(1);
+}
+
+/* =========================================================================
+   2. NEW ARRIVALS — horizontal rail
+   ========================================================================= */
+.hm-railnav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.hm-railcount {
+  margin: 0;
+  font: 500 13px/1 var(--font-b);
+  color: var(--ink-50);
+  letter-spacing: .02em;
+}
+
+.hm-arrows {
+  display: flex;
+  gap: 8px;
+}
+
+.hm-arrow {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background .2s var(--ease), color .2s var(--ease),
+    border-color .2s var(--ease), transform .15s var(--ease);
+}
+
+.hm-arrow svg {
+  width: 17px;
+  height: 17px;
+}
+
+.hm-arrow:hover:not(:disabled) {
+  background: var(--brass-d);
+  border-color: var(--brass-d);
+  color: #fff;
+}
+
+.hm-arrow:active:not(:disabled) {
+  transform: scale(.94);
+}
+
+.hm-arrow:disabled {
+  opacity: .3;
+  cursor: default;
+}
+
+.hm-arrow:focus-visible {
+  outline: 2px solid var(--brass-d);
+  outline-offset: 2px;
+}
+
+/* rail itself */
+.hm-rail {
+  display: flex;
+  gap: 22px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  /* wrap ke edge tak bleed — carousel jaisa lage */
+  padding: 6px 4px 10px;
+  margin: 0 -4px;
+  cursor: grab;
+}
+
+.hm-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.hm-rail.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+}
+
+.hm-rail.is-dragging * {
+  pointer-events: none;
+}
+
+.hm-slide {
+  flex: 0 0 clamp(240px, 24%, 300px);
+  scroll-snap-align: start;
+}
+
+/* progress bar */
+.hm-progress {
+  position: relative;
+  height: 2px;
+  margin-top: 18px;
+  border-radius: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.hm-progress span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 20%;
+  border-radius: 2px;
+  background: var(--brass-d);
+  transition: width .25s var(--ease), transform .25s var(--ease);
+}
+
+/* =========================================================================
+   3. MADE BY HAND — staggered mosaic
+   ========================================================================= */
+.hm-sub {
+  max-width: 46ch;
+  margin: 14px auto 0;
+  font: 400 15px/1.6 var(--font-b);
+  color: var(--ink-50);
+}
+
+.hm-mosaic {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 30px 22px;
+  align-items: start;
+  margin-top: 42px;
+}
+
+/* columns ko halka offset — flat "4 upar, 4 neeche" rhythm toot jata hai */
+@media (min-width: 981px) {
+  .hm-mosaic>.hm-cell:nth-child(4n+2) {
+    margin-top: 34px;
+  }
+
+  .hm-mosaic>.hm-cell:nth-child(4n+3) {
+    margin-top: 14px;
+  }
+
+  .hm-mosaic>.hm-cell:nth-child(4n+4) {
+    margin-top: 48px;
+  }
+}
+
+/* har 7ve card ko thoda wide — grid me rhythm break */
+@media (min-width: 1200px) {
+  .hm-mosaic>.hm-cell:nth-child(7n) {
+    grid-column: span 2;
+  }
+
+  .hm-mosaic>.hm-cell:nth-child(7n) .pc-media {
+    aspect-ratio: 16 / 10;
+  }
+
+  .hm-mosaic>.hm-cell:nth-child(7n) .pc-title {
+    font-size: 23px !important;
+    min-height: 0;
+  }
+}
+
+/* =========================================================================
+   4. RESPONSIVE
+   ========================================================================= */
+@media (max-width: 980px) {
+  .hm-mosaic {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px 16px;
+  }
+
+  .hm-slide {
+    flex-basis: 240px;
+  }
+}
+
+@media (max-width: 760px) {
+  .hm-mosaic {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 12px;
+    margin-top: 28px;
+  }
+
+  .hm-railnav {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .hm-slide {
+    flex-basis: 74%;
+  }
+
+  .hm-rail {
+    gap: 14px;
+  }
+
+  .hm-sub {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 520px) {
+  .hm-slide {
+    flex-basis: 82%;
+  }
+
+  .hm-arrows {
+    display: none;
+    /* mobile par swipe hi kaafi hai */
+  }
+}
+
+/* =========================================================================
+   5. ACCESSIBILITY
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+
+  .hm-section .hm-slide,
+  .hm-section .hm-cell {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .hm-section .pcard-v2 .pc-img.main {
+    transform: none;
+    transition: none;
+  }
+
+  .hm-rail {
+    scroll-behavior: auto;
+  }
+
+  .hm-mosaic>.hm-cell {
+    margin-top: 0 !important;
+  }
+}
